@@ -1,42 +1,37 @@
-/**
- * Custom Plugin Entry Point
- *
- * This file is where you can define custom actions, providers, and evaluators
- * for your ElizaOS agent. Add your logic here and reference this plugin in
- * your character file.
- *
- * ElizaOS Plugin Docs: https://elizaos.github.io/eliza/docs/core/plugins
- */
+import { type Plugin, type Action, type IAgentRuntime, type Memory, type State, type HandlerCallback } from "@elizaos/core";
+import { character } from "./character";
 
-import { type Plugin } from "@elizaos/core";
-
-/**
- * Example custom action.
- * Replace this with your own action logic.
- */
-const exampleAction = {
-  name: "EXAMPLE_ACTION",
-  description: "An example action — replace with your own.",
-  similes: ["DEMO", "SAMPLE"],
-  validate: async () => true,
-  handler: async (_runtime: unknown, message: { content: { text: string } }) => {
-    console.log("Custom action triggered with message:", message.content.text);
-    return true;
+const helloAction: Action = {
+  name: "HELLO_IDEAMINER",
+  description: "Confirms IdeaMiner plugin is loaded and working.",
+  similes: ["PING", "TEST", "STATUS"],
+  validate: async (_runtime: IAgentRuntime, _message: Memory) => true,
+  handler: async (
+    _runtime: IAgentRuntime,
+    _message: Memory,
+    _state?: State,
+    _options?: { [key: string]: unknown },
+    callback?: HandlerCallback
+  ): Promise<void> => {
+    if (callback) {
+      await callback({ text: "IdeaMiner is online. Ready to scan for opportunities." });
+    }
   },
-  examples: [],
+  examples: [
+    [
+      { name: "user", content: { text: "are you working?" } },
+      { name: "IdeaMiner", content: { text: "IdeaMiner is online. Ready to scan for opportunities." } },
+    ],
+  ],
 };
 
-/**
- * Your custom plugin.
- * Add this plugin's name to the `plugins` array in your character file
- * to activate it.
- */
 export const customPlugin: Plugin = {
-  name: "custom-plugin",
-  description: "My custom ElizaOS plugin",
-  actions: [exampleAction],
+  name: "plugin-ideaminer",
+  description: "IdeaMiner — scans the web for problems worth solving",
+  actions: [helloAction],
   providers: [],
   evaluators: [],
 };
 
+export { character };
 export default customPlugin;

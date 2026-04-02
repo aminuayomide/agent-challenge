@@ -2,7 +2,7 @@ FROM node:23-slim
 
 WORKDIR /app
 
-RUN npm install -g bun@1.3.11
+RUN npm install -g bun@1.3.11 @elizaos/cli
 
 COPY package.json ./
 COPY bun.lock* ./

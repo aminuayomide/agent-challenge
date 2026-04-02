@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IdeaMiner — Opportunity Intelligence</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0f;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 24px 40px;
+      border-bottom: 1px solid #1e2030;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    header span {
+      font-size: 13px;
+      color: #64748b;
+      margin-left: 4px;
+    }
+
+    .status-dot {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    main {
+      flex: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 48px 24px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6366f1, #a78bfa, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #64748b;
+      font-size: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-box input {
+      flex: 1;
+      background: #12121a;
+      border: 1px solid #1e2030;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 15px;
+      color: #e2e8f0;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: #6366f1;
+    }
+
+    .search-box input::placeholder {
+      color: #334155;
+    }
+
+    .search-box button {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none;
+      border-radius: 12px;
+      padding: 16px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .search-box button:hover { opacity: 0.9; }
+    .search-box button:active { transform: scale(0.98); }
+    .search-box button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .suggestions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .chip {
+      background: #12121a;
+      border: 1px solid #1e2030;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover {
+      border-color: #6366f1;
+      color: #a5b4fc;
+    }
+
+    .results { display: flex; flex-direction: column; gap: 16px; }
+
+    .scanning-card {
+      background: #12121a;
+      border: 1px solid #1e2030;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .scanning-animation {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .scanning-animation span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6366f1;
+      animation: bounce 1.2s infinite;
+    }
+
+    .scanning-animation span:nth-child(2) { animation-delay: 0.2s; }
+    .scanning-animation span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .scanning-card p {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .scanning-card p strong {
+      color: #a5b4fc;
+    }
+
+    .report-card {
+      background: #12121a;
+      border: 1px solid #1e2030;
+      border-radius: 16px;
+      padding: 28px 32px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .report-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .report-text strong, .report-text b {
+      color: #f1f5f9;
+    }
+
+    .timestamp {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #334155;
+    }
+
+    .error-card {
+      background: #1a0f0f;
+      border: 1px solid #3f1a1a;
+      border-radius: 16px;
+      padding: 24px 28px;
+      color: #f87171;
+      font-size: 14px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      color: #334155;
+    }
+
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state p { font-size: 15px; }
+
+    .history-label {
+      font-size: 12px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo" style="-webkit-text-fill-color: white; font-size: 20px;">⛏</div>
+  <h1>IdeaMiner <span>by Nosana</span></h1>
+  <div class="status-dot">
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Connecting...</span>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h2>Mine Startup Opportunities</h2>
+    <p>IdeaMiner scans Reddit, X, GitHub and news sources to find real problems worth solving — and turns them into structured opportunity reports.</p>
+  </div>
+
+  <div class="search-box">
+    <input
+      type="text"
+      id="queryInput"
+      placeholder="e.g. fintech, healthcare, developer tools, logistics..."
+      autocomplete="off"
+    />
+    <button id="scanBtn" onclick="scan()">⛏ Scan</button>
+  </div>
+
+  <div class="suggestions">
+    <div class="chip" onclick="quickScan('fintech')">fintech</div>
+    <div class="chip" onclick="quickScan('developer tools')">developer tools</div>
+    <div class="chip" onclick="quickScan('healthcare')">healthcare</div>
+    <div class="chip" onclick="quickScan('web3')">web3</div>
+    <div class="chip" onclick="quickScan('logistics')">logistics</div>
+    <div class="chip" onclick="quickScan('remote work')">remote work</div>
+    <div class="chip" onclick="quickScan('AI tools')">AI tools</div>
+    <div class="chip" onclick="quickScan('e-commerce')">e-commerce</div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="empty-state">
+      <div class="icon">🔭</div>
+      <p>Enter a space above to start mining for opportunities</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  const API_BASE = 'http://localhost:3000';
+  let agentId = null;
+  let roomId = null;
+
+  async function init() {
+    try {
+      const res = await fetch(`${API_BASE}/api/agents`);
+      const data = await res.json();
+      const agents = data.agents || data;
+      const agent = Array.isArray(agents)
+        ? agents.find(a => a.name === 'IdeaMiner') || agents[0]
+        : agents;
+
+      if (agent) {
+        agentId = agent.id;
+        document.getElementById('statusDot').style.background = '#22c55e';
+        document.getElementById('statusText').textContent = 'IdeaMiner Online';
+      }
+    } catch (e) {
+      document.getElementById('statusDot').style.background = '#ef4444';
+      document.getElementById('statusText').textContent = 'Offline — start elizaos dev';
+    }
+  }
+
+  function quickScan(topic) {
+    document.getElementById('queryInput').value = topic;
+    scan();
+  }
+
+  async function scan() {
+    const input = document.getElementById('queryInput');
+    const query = input.value.trim();
+    if (!query) return;
+
+    const btn = document.getElementById('scanBtn');
+    btn.disabled = true;
+    btn.textContent = 'Scanning...';
+
+    const resultsEl = document.getElementById('results');
+
+    // Show scanning animation
+    const scanCard = document.createElement('div');
+    scanCard.className = 'scanning-card';
+    scanCard.id = 'scanningCard';
+    scanCard.innerHTML = `
+      <div class="scanning-animation">
+        <span></span><span></span><span></span>
+      </div>
+      <p>Scanning Reddit, X, GitHub and news for problems in <strong>${query}</strong>...</p>
+    `;
+
+    // Clear empty state on first scan
+    if (resultsEl.querySelector('.empty-state')) {
+      resultsEl.innerHTML = '';
+    }
+
+    resultsEl.insertBefore(scanCard, resultsEl.firstChild);
+
+    try {
+      if (!agentId) await init();
+
+      // Create or reuse room
+      if (!roomId) {
+        const roomRes = await fetch(`${API_BASE}/api/agents/${agentId}/rooms`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'ideaminer-frontend' })
+        });
+        const roomData = await roomRes.json();
+        roomId = roomData.id || roomData.roomId;
+      }
+
+      // Send message
+      await fetch(`${API_BASE}/api/agents/${agentId}/rooms/${roomId}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: `find problems in ${query}`,
+          userId: 'frontend-user',
+          userName: 'User'
+        })
+      });
+
+      // Poll for response
+      let attempts = 0;
+      const maxAttempts = 48;
+      const poll = setInterval(async () => {
+        attempts++;
+        try {
+          const msgRes = await fetch(`${API_BASE}/api/agents/${agentId}/rooms/${roomId}/messages`);
+          const msgData = await msgRes.json();
+          const messages = msgData.messages || msgData;
+
+          if (Array.isArray(messages) && messages.length > 0) {
+            const agentMessages = messages.filter(m =>
+              m.userId === agentId || m.senderId === agentId || m.role === 'assistant'
+            );
+
+            if (agentMessages.length > 0) {
+              const latest = agentMessages[agentMessages.length - 1];
+              const text = latest.text || latest.content?.text || '';
+
+              if (text && text.includes('OPPORTUNITY')) {
+                clearInterval(poll);
+                showReport(query, text, resultsEl, scanCard);
+                btn.disabled = false;
+                btn.textContent = '⛏ Scan';
+                return;
+              }
+            }
+          }
+        } catch (e) { /* keep polling */ }
+
+        if (attempts >= maxAttempts) {
+          clearInterval(poll);
+          scanCard.remove();
+          showError('IdeaMiner is thinking — the LLM may be rate limited. Wait 30 seconds and try again.', resultsEl);
+          btn.disabled = false;
+          btn.textContent = '⛏ Scan';
+        }
+      }, 3000);
+
+    } catch (e) {
+      scanCard.remove();
+      showError(`Connection error: ${e.message}. Make sure elizaos dev is running.`, resultsEl);
+      btn.disabled = false;
+      btn.textContent = '⛏ Scan';
+    }
+  }
+
+  function showReport(query, text, container, scanCard) {
+    scanCard.remove();
+
+    const card = document.createElement('div');
+    card.className = 'report-card';
+
+    const formatted = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    card.innerHTML = `
+      <div class="report-text">${formatted}</div>
+      <div class="timestamp">Scanned at ${new Date().toLocaleTimeString()} · Space: ${query}</div>
+    `;
+
+    container.insertBefore(card, container.firstChild);
+  }
+
+  function showError(msg, container) {
+    const card = document.createElement('div');
+    card.className = 'error-card';
+    card.textContent = '⚠ ' + msg;
+    container.insertBefore(card, container.firstChild);
+  }
+
+  // Enter key support
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+    document.getElementById('queryInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') scan();
+    });
+  });
+</script>
+</body>
+</html>

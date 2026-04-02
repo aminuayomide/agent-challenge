@@ -1,23 +1,26 @@
 {
+  "version": "0.1",
+  "type": "container",
   "ops": [
     {
       "id": "agent",
+      "type": "container/run",
       "args": {
-        "image": "yourusername/nosana-eliza-agent:latest",
+        "image": "aminuayomide/ideaminer:latest",
         "expose": 3000,
         "env": {
-          "OPENAI_API_KEY": "nosana",
-          "OPENAI_API_URL": "TODO: replace with actual Nosana Qwen3.5 endpoint URL",
-          "MODEL_NAME": "qwen3.5-27b",
+          "OPENAI_API_KEY": "YOUR_GROQ_KEY",
+          "OPENAI_BASE_URL": "https://api.groq.com/openai/v1",
+          "OPENAI_SMALL_MODEL": "llama3-8b-8192",
+          "OPENAI_LARGE_MODEL": "llama3-8b-8192",
+          "TAVILY_API_KEY": "YOUR_TAVILY_KEY",
           "SERVER_PORT": "3000",
           "NODE_ENV": "production"
         }
       },
       "execution": {
         "group": "run"
-      },
-      "type": "container/run"
+      }
     }
-  ],
-  "version": "0.1"
+  ]
 }

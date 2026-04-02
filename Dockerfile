@@ -20,4 +20,4 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV SERVER_PORT=3000
 
-CMD ["elizaos", "start", "--character", "./characters/agent.character.json"]
+CMD ["node", "node_modules/@elizaos/cli/dist/index.js", "start", "--character", "./characters/agent.character.json"]

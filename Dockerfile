@@ -7,17 +7,13 @@ RUN npm install -g bun@1.3.11
 COPY package.json ./
 COPY bun.lock* ./
 
-RUN bun install --production
-
-RUN bun add -g @elizaos/cli
+RUN bun install
 
 COPY . .
-
-RUN bun run build 2>/dev/null || true
 
 EXPOSE 3000
 
 ENV NODE_ENV=production
 ENV SERVER_PORT=3000
 
-CMD ["node", "node_modules/@elizaos/cli/dist/index.js", "start", "--character", "./characters/agent.character.json"]
+CMD ["./node_modules/.bin/elizaos", "start", "--character", "./characters/agent.character.json"]
